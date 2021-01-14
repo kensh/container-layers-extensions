@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  python3.8
+
+  Sample SAM Template for container-layer
+
+
+
+Resources:
+  PythonExtensionLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      Description: PythonExtensionLayer description
+      ContentUri: 'layers/extension-layer'
+      CompatibleRuntimes:
+        - python3.8
+      LicenseInfo: 'MIT'
+      RetentionPolicy: Delete
+    Metadata:
+      BuildMethod: makefile
+
+  PythonLibLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      Description: PythonLibLayer description
+      ContentUri: 'layers/lib-layer'
+      CompatibleRuntimes:
+        - python3.8
+      LicenseInfo: 'MIT'
+      RetentionPolicy: Delete
+    Metadata:
+      BuildMethod: python3.8

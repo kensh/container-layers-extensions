@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  python3.8
+
+  SAM Template for container-main
+
+Globals:
+  Function:
+    Timeout: 3
+
+Parameters:
+ ACCOUNTID:
+   Type: String
+   Default: None
+ REGION:
+   Type: String
+   Default: ap-northeast-1
+ ACCESSKEYID:
+   Type: String
+   Default: None
+ SECRETACCESSKEY:
+   Type: String
+   Default: None
+
+
+Resources:
+  ContainerMainFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      PackageType: Image
+      ImageUri: ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/container-main
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./src
+      DockerTag: python3.8-v1
+      DockerBuildArgs:
+        AWS_ACCOUNT_ID: !Ref ACCOUNTID
+        AWS_DEFAULT_REGION: !Ref REGION
+        AWS_ACCESS_KEY_ID: !Ref ACCESSKEYID
+        AWS_SECRET_ACCESS_KEY: !Ref SECRETACCESSKEY
+        LAYER1: PythonExtensionLayer
+        LAYER2: PythonLibLayer
+
+Outputs:
+  ContainerMainFunction:
+    Description: "ContainerMain Lambda Function ARN"
+    Value: !GetAtt ContainerMainFunction.Arn
+  ContainerMainFunctionIamRole:
+    Description: "Implicit IAM Role created for ContainerMain function"
+    Value: !GetAtt ContainerMainFunctionRole.Arn
